@@ -41,13 +41,14 @@ class Orchestrator:
         """
         logger.info("orchestrator_start", profile_id=profile_id)
 
+        # added line for fix
+        self.context_manager = ContextManager()
+
         # Build execution plan
         plan = self._build_plan(profile_data)
 
-        # Load previous session state if available
-        session_state = {}
         if self.session_store:
-            session_state = self.session_store.get(profile_id) or {}
+            self.session_store.delete(profile_id)
 
         # Execute plan
         results = {}
@@ -64,8 +65,7 @@ class Orchestrator:
 
         # Persist state
         if self.session_store:
-            session_state.update(results)
-            self.session_store.set(profile_id, session_state)
+            self.session_store.set(profile_id, results)
 
         logger.info("orchestrator_complete", profile_id=profile_id, tools_executed=len(results))
 

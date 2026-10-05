@@ -10,6 +10,8 @@ build/
 .venv/
 venv/
 *.egg
+plan.md 
+comment.md
 
 # Environment
 .env
