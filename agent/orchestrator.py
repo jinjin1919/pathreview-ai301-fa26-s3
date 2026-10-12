@@ -41,8 +41,7 @@ class Orchestrator:
         """
         logger.info("orchestrator_start", profile_id=profile_id)
 
-        # added line for fix
-        self.context_manager = ContextManager()
+        self.context_manager.clear()
 
         # Build execution plan
         plan = self._build_plan(profile_data)

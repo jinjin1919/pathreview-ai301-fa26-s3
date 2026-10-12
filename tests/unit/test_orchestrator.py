@@ -2,6 +2,7 @@
 
 import pytest
 
+from agent.memory.context_manager import ContextManager
 from agent.memory.session_store import SessionStore
 from agent.orchestrator import Orchestrator
 from agent.tools.base import BaseTool, ToolResult
@@ -95,3 +96,15 @@ class TestOrchestratorSessionIsolation:
         orchestrator.run("profile-B", PROFILE_B_DATA)
 
         assert fake_redis.delete_calls == ["session:profile-A", "session:profile-B"]
+
+
+@pytest.mark.unit
+def test_context_manager_clear_empties_cache():
+    """ContextManager.clear() must drop every cached tool result."""
+    cm = ContextManager()
+    cm.store_tool_result("tool", "hash", ToolResult(success=True, data={}))
+
+    cm.clear()
+
+    assert cm.get_all_results() == {}
+    assert cm.get_tool_result("tool", "hash") is None
